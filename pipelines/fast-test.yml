@@ -181,10 +181,10 @@ stages:
           --ignore=ut/sdk/test_compressor_tf.py \
           --ignore=ut/sdk/test_compressor_torch.py \
           --ignore=ut/sdk/test_model_speedup.py
-    #    python -m pytest ut/sdk/test_pruners.py --cov-config=.coveragerc --cov-append
-    #    python -m pytest ut/sdk/test_compressor_tf.py --cov-config=.coveragerc --cov-append
-    #    python -m pytest ut/sdk/test_compressor_torch.py --cov-config=.coveragerc --cov-append
-    #    python -m pytest ut/sdk/test_model_speedup.py --cov-config=.coveragerc --cov-append
+        python -m pytest ut/sdk/test_pruners.py --cov-config=.coveragerc --cov-append
+        python -m pytest ut/sdk/test_compressor_tf.py --cov-config=.coveragerc --cov-append
+        python -m pytest ut/sdk/test_compressor_torch.py --cov-config=.coveragerc --cov-append
+        python -m pytest ut/sdk/test_model_speedup.py --cov-config=.coveragerc --cov-append
       displayName: Python unit test
 
     #- script: |
