@@ -173,25 +173,25 @@ stages:
         python -m pip install -e .[PPOTuner,DNGO]
       displayName: Install extra dependencies
 
-    #- script: |
-    #    set -e
-    #    cd test
-    #    python -m pytest ut --cov-config=.coveragerc \
-    #      --ignore=ut/sdk/test_pruners.py \
-    #      --ignore=ut/sdk/test_compressor_tf.py \
-    #      --ignore=ut/sdk/test_compressor_torch.py \
-    #      --ignore=ut/sdk/test_model_speedup.py
+    - script: |
+        set -e
+        cd test
+        python -m pytest ut --cov-config=.coveragerc \
+          --ignore=ut/sdk/test_pruners.py \
+          --ignore=ut/sdk/test_compressor_tf.py \
+          --ignore=ut/sdk/test_compressor_torch.py \
+          --ignore=ut/sdk/test_model_speedup.py
     #    python -m pytest ut/sdk/test_pruners.py --cov-config=.coveragerc --cov-append
     #    python -m pytest ut/sdk/test_compressor_tf.py --cov-config=.coveragerc --cov-append
     #    python -m pytest ut/sdk/test_compressor_torch.py --cov-config=.coveragerc --cov-append
     #    python -m pytest ut/sdk/test_model_speedup.py --cov-config=.coveragerc --cov-append
-    #  displayName: Python unit test
+      displayName: Python unit test
 
-    - script: |
-        set -e
-        cd ts/nni_manager
-        yarn test
-      displayName: TypeScript unit test
+    #- script: |
+    #    set -e
+    #    cd ts/nni_manager
+    #    yarn test
+    #  displayName: TypeScript unit test
 
     #- task: PublishTestResults@2
     #  condition: succeededOrFailed()
@@ -203,7 +203,8 @@ stages:
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: ts/nni_manager/coverage/cobertura-coverage.xml
+        summaryFileLocation: test/coverage.xml
+        #summaryFileLocation: ts/nni_manager/coverage/cobertura-coverage.xml
         #reportDirectory: ts/nni_manager/coverage
         failIfCoverageEmpty: true
       displayName: Publish code coverage results
