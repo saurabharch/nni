@@ -23,7 +23,7 @@ stages:
 #    - task: Cache@2
 #      inputs:
 #        key: 'python | "$(Agent.OS)" | dependencies/*.txt'
-#        restoreKeys: | 
+#        restoreKeys: |
 #          python | "$(Agent.OS)"
 #          python
 #        path: $(PIP_CACHE_DIR)
@@ -59,7 +59,7 @@ stages:
 #    - task: Cache@2
 #      inputs:
 #        key: 'python | "$(Agent.OS)" | dependencies/*.txt'
-#        restoreKeys: | 
+#        restoreKeys: |
 #          python | "$(Agent.OS)"
 #          python
 #        path: $(PIP_CACHE_DIR)
@@ -213,95 +213,94 @@ stages:
         failIfCoverageEmpty: true
       displayName: Publish code coverage results
 
-    #- script: |
-    #    cd test
-    #    python nni_test/nnitest/run_tests.py --config config/pr_tests.yml
-    #  displayName: Simple integration test
+    - script: |
+        cd test
+        python nni_test/nnitest/run_tests.py --config config/pr_tests.yml
+      displayName: Simple integration test
 
-#  - job: ubuntu_legacy
-#    pool:
-#      vmImage: ubuntu-18.04
-#    variables:
-#      PIP_CACHE_DIR: $(Pipeline.Workspace)/.pip
-#      YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-#
-#    steps:
-#    - task: UsePythonVersion@0
-#      inputs:
-#        versionSpec: 3.6
-#      displayName: Configure Python version
-#
-#    - task: NodeTool@0
-#      inputs:
-#        versionSpec: 16.3.0
-#      displayName: Configure Node.js version
-#
-#    - script: |
-#        sudo apt-get install -y pandoc
-#        sudo apt-get remove swig -y
-#        sudo apt-get install swig3.0 -y
-#        sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
-#      displayName: Install apt packages
-#
-#    - task: Cache@2
-#      inputs:
-#        key: 'python | "$(Agent.OS)" | legacy | dependencies/*.txt'
-#        restoreKeys: | 
-#          python | "$(Agent.OS)"
-#          python
-#        path: $(PIP_CACHE_DIR)
-#      displayName: Cache pip packages
-#
-#    - task: Cache@2
-#      inputs:
-#        key: 'yarn | "$(Agent.OS)" | legacy | ts/**/yarn.lock, !**/node_modules/**'
-#        restoreKeys: |
-#          yarn | "$(Agent.OS)"
-#        path: $(YARN_CACHE_FOLDER)
-#      displayName: Cache yarn packages
-#
-#    - script: |
-#        set -e
-#        python -m pip install -U -r dependencies/setup.txt
-#        python -m pip install -r dependencies/develop.txt
-#        echo "##vso[task.setvariable variable=PATH]${HOME}/.local/bin:${PATH}"
-#      displayName: Install Python tools
-#
-#    - script: |
-#        python setup.py develop
-#      displayName: Install NNI
-#
-#    - script: |
-#        set -e
-#        python -m pip install -r dependencies/recommended_legacy.txt
-#        python -m pip install -e .[SMAC,BOHB,PPOTuner,DNGO]
-#      displayName: Install extra dependencies
-#
-#    # Need del later
-#    - script: |
-#        set -e
-#        python interim_vision_patch.py
-#      displayName: Vision MNIST Patch
-#
-#
-#    - script: |
-#        cd test
-#        python nni_test/nnitest/run_tests.py --config config/pr_tests.yml
-#      displayName: Simple integration test
-#
-#    - script: |
-#        cd test
-#        python -m pytest ut --ignore=ut/retiarii/test_convert_basic.py \
-#          --ignore=ut/retiarii/test_convert_operators.py \
-#          --ignore=ut/retiarii/test_convert_pytorch.py
-#      displayName: Python unit test
-#
-#    - script: |
-#        set -e
-#        cd ts/nni_manager
-#        yarn test
-#      displayName: TypeScript unit test
-#
+  - job: ubuntu_legacy
+    pool:
+      vmImage: ubuntu-18.04
+    variables:
+      PIP_CACHE_DIR: $(Pipeline.Workspace)/.pip
+      YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: 3.6
+      displayName: Configure Python version
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: 16.3.0
+      displayName: Configure Node.js version
+
+    - script: |
+        sudo apt-get install -y pandoc
+        sudo apt-get remove swig -y
+        sudo apt-get install swig3.0 -y
+        sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
+      displayName: Install apt packages
+
+    - task: Cache@2
+      inputs:
+        key: 'python | "$(Agent.OS)" | legacy | dependencies/*.txt'
+        restoreKeys: |
+          python | "$(Agent.OS)"
+          python
+        path: $(PIP_CACHE_DIR)
+      displayName: Cache pip packages
+
+    - task: Cache@2
+      inputs:
+        key: 'yarn | "$(Agent.OS)" | legacy | ts/**/yarn.lock, !**/node_modules/**'
+        restoreKeys: |
+          yarn | "$(Agent.OS)"
+        path: $(YARN_CACHE_FOLDER)
+      displayName: Cache yarn packages
+
+    - script: |
+        set -e
+        python -m pip install -U -r dependencies/setup.txt
+        python -m pip install -r dependencies/develop.txt
+        echo "##vso[task.setvariable variable=PATH]${HOME}/.local/bin:${PATH}"
+      displayName: Install Python tools
+
+    - script: |
+        python setup.py develop
+      displayName: Install NNI
+
+    - script: |
+        set -e
+        python -m pip install -r dependencies/recommended_legacy.txt
+        python -m pip install -e .[SMAC,BOHB,PPOTuner,DNGO]
+      displayName: Install extra dependencies
+
+    # Need del later
+    - script: |
+        set -e
+        python interim_vision_patch.py
+      displayName: Vision MNIST Patch
+
+    - script: |
+        cd test
+        python nni_test/nnitest/run_tests.py --config config/pr_tests.yml
+      displayName: Simple integration test
+
+    - script: |
+        cd test
+        python -m pytest ut --ignore=ut/retiarii/test_convert_basic.py \
+          --ignore=ut/retiarii/test_convert_operators.py \
+          --ignore=ut/retiarii/test_convert_pytorch.py
+      displayName: Python unit test
+
+    - script: |
+        set -e
+        cd ts/nni_manager
+        yarn test
+      displayName: TypeScript unit test
+
 #  - job: macos
 #    pool:
 #      vmImage: macOS-10.15
@@ -330,7 +329,7 @@ stages:
 #    - task: Cache@2
 #      inputs:
 #        key: 'python | "$(Agent.OS)" | dependencies/*.txt'
-#        restoreKeys: | 
+#        restoreKeys: |
 #          python | "$(Agent.OS)"
 #          python
 #        path: $(PIP_CACHE_DIR)
